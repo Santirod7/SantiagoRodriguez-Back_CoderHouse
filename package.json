@@ -1,0 +1,23 @@
+{
+  "name": "santiagorodriguez-back_coderhouse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Santirod7/SantiagoRodriguez-Back_CoderHouse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Santirod7/SantiagoRodriguez-Back_CoderHouse/issues"
+  },
+  "homepage": "https://github.com/Santirod7/SantiagoRodriguez-Back_CoderHouse#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
