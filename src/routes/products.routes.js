@@ -1,11 +1,11 @@
 const { Router } = require('express');
 const ProductManager = require('../managers/ProductManager.js');
 const manager = new ProductManager(__dirname + '/../data/Productos.json');
-const router = Router();
+const productsRouter = Router();
 
 
 // Leer todos los productos (GET /api/products)
-router.get('/', async (req, res) => {
+productsRouter.get('/', async (req, res) => {
     try {
         const products = await manager.getAllProducts();
         res.json({ status: 'success', payload: products });
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // Leer producto por ID (GET /api/products/:pid)
-router.get('/:pid', async (req, res) => {
+productsRouter.get('/:pid', async (req, res) => {
     try {
         const productId = req.params.pid;
         const product = await manager.getProductById(productId);
@@ -29,7 +29,7 @@ router.get('/:pid', async (req, res) => {
 });
 
 // Crear producto (POST /api/products)
-router.post('/', async (req, res) => {
+productsRouter.post('/', async (req, res) => {
     try {
         const productData = req.body;
         const newProduct = await manager.addProduct(productData);
@@ -39,5 +39,34 @@ router.post('/', async (req, res) => {
         res.status(400).json({ status: 'error', message: error.message });
     }
 });
+// Actualizar producto
+productsRouter.put('/:pid', async (req, res) => {
+    try {
+        const productId = req.params.pid;
+        const dataToUpdate = req.body;
+        if (Object.keys(dataToUpdate).length === 0) {
+            return res.status(400).json({ status: 'error', message: 'Debe enviar al menos un campo para actualizar' });
+        }
+        const updatedProduct = await manager.updateProductById(productId, dataToUpdate);
+        if (!updatedProduct) {
+            return res.status(404).json({ status: 'error', message: 'Producto no encontrado para actualizar' });  }
+    res.json({ status: 'success', payload: updatedProduct });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+});
 
-module.exports = router;
+// eliminar producto (DELETE /api/products/:pid)
+productsRouter.delete('/:pid', async (req, res) => {
+    try {
+        const productId = req.params.pid;
+        const result = await manager.deleteProductById(productId);
+        if (!result) {
+            return res.status(404).json({ status: 'error', message: 'producto no encontrado para eliminar' });      }
+        res.json({ status: 'success', message: `Producto con id '${productId}' eliminado correctamente.` });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+});
+
+module.exports = productsRouter;

@@ -1,8 +1,5 @@
 const fs = require("fs/promises"); 
 const crypto = require("crypto");   
-const path = require("path");       
-
-const productsFilePath = path.join(__dirname, "data", "Productos.json");
 
 class ProductManager {
   constructor(filePath) {
@@ -109,52 +106,5 @@ class ProductManager {
   }
 }
 
-// TEST
-
-async function testProductManager() {
-  const manager = new ProductManager(productsFilePath);
-
-  console.log("agrego un producto");
-  const prod1 = await manager.addProduct({
-    title: "Laptop Pro",
-    description: "Una laptop potente para desarrolladores",
-    code: "LP123",
-    price: 1500,
-    stock: 25,
-    category: "electronica"
-  });
-
-  await manager.addProduct({
-    title: "Mouse Gamer",
-    description: "Mouse con luces RGB",
-    code: "MG456",
-    price: 75,
-    stock: 100,
-    category: "accesorios"
-  });
-
-  console.log("\n lista inicial");
-  console.log(await manager.getAllProducts());
-
-  console.log(`\n actualizo el stock de laptop (ID: ${prod1.id})`);
-  await manager.updateProductById(prod1.id, { stock: 20, price: 1450 });
-
-  console.log("\n busco laptop para ver si se cambió: ");
-  console.log(await manager.getProductById(prod1.id));
-  
-  console.log("\n elimino el mouse ");
-  const allProducts = await manager.getAllProducts();
-  const mouse = allProducts.find(p => p.code === "MG456");
-  if(mouse) {
-      await manager.deleteProductById(mouse.id);
-  }
-
-  console.log("\n lista final");
-  console.log(await manager.getAllProducts());
-}
-
-if (require.main === module) {
-    testProductManager();
-}
 
 module.exports = ProductManager;

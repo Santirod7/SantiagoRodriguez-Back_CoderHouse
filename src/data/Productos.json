@@ -40,19 +40,9 @@
     "category": "hogar"
   },
   {
-    "id": "z9y8x-w7v6-u5t4-s3r2-q1p0o9n8m7l6",
-    "title": "Cafetera de Goteo Automática",
-    "description": "Cafetera programable para 12 tazas con filtro permanente.",
-    "code": "HOG-CAF-AUT12",
-    "price": 59.95,
-    "status": false,
-    "stock": 0,
-    "category": "hogar"
-  },
-  {
-    "id": "c1012c9d-abd5-4910-9af3-056d570f9846",
-    "title": "Laptop Pro",
-    "description": "Una laptop potente para desarrolladores",
+    "id": "39a051c9-2cda-4cf5-a0e6-bf2f5ad8ccb0",
+    "title": "compu pro",
+    "description": "Una compu excelente para desarrolladores",
     "code": "LP123",
     "price": 1450,
     "status": true,
