@@ -1,0 +1,52 @@
+[
+  {
+    "id": "f8a4b-c3d2-e1f0-g9h8-i7j6k5l4m3n2",
+    "title": "Smartphone Galaxy S25",
+    "description": "El último modelo de smartphone con cámara de 200MP y pantalla AMOLED.",
+    "code": "CEL-GAL-S25",
+    "price": 999.99,
+    "status": true,
+    "stock": 50,
+    "category": "electronica"
+  },
+  {
+    "id": "n2m3l-k4j5-i6h7-g8f9-e0d1c2b3a4f8",
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado mecánico para gaming con switches rojos y retroiluminación RGB personalizable.",
+    "code": "TEC-GAM-RGB01",
+    "price": 120.5,
+    "status": true,
+    "stock": 150,
+    "category": "accesorios"
+  },
+  {
+    "id": "a1b2c-d3e4-f5g6-h7i8-j9k0l1m2n3o4",
+    "title": "El Problema de los Tres Cuerpos",
+    "description": "Novela de ciencia ficción aclamada por la crítica, escrita por Cixin Liu.",
+    "code": "LIB-SCIFI-001",
+    "price": 25,
+    "status": true,
+    "stock": 200,
+    "category": "libros"
+  },
+  {
+    "id": "p5o4n-m3l2-k1j0-i9h8-g7f6e5d4c3b2",
+    "title": "Silla de Oficina Ergonómica",
+    "description": "Silla con soporte lumbar ajustable y reposabrazos 4D para máxima comodidad.",
+    "code": "HOG-SIL-ERG03",
+    "price": 350,
+    "status": true,
+    "stock": 30,
+    "category": "hogar"
+  },
+  {
+    "id": "39a051c9-2cda-4cf5-a0e6-bf2f5ad8ccb0",
+    "title": "compu pro",
+    "description": "Una compu excelente para desarrolladores",
+    "code": "LP123",
+    "price": 1450,
+    "status": true,
+    "stock": 20,
+    "category": "electronica"
+  }
+]
