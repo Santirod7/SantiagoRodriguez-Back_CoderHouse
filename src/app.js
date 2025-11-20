@@ -1,18 +1,32 @@
 const path = require("path");
 const express = require("express");
+const {engine} = require("express-handlebars");
+
+// Managers y Routes
 const ProductManager = require("./managers/ProductManager");
 const CartManager = require("./managers/CartManager");
 const productsRouter = require("./routes/products.routes");
 const cartsRouter = require("./routes/cart.routes");
+const viewsRouter = require("./routes/views.routes");
+
+// Configuración de la app
 const app = express();
 
 app.get("/", (req, res) => {
   res.send("Hola mundazoooooooo!");
 });
 
+// Configuración Handlebars
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname, "views"));
+
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes API y Views
+app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
