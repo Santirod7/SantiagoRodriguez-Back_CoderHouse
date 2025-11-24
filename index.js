@@ -13,14 +13,20 @@ const server = http.createServer(app);
 //  Creo el servidor de Websockets
 const io = new Server(server);
 
+// Middleware para hacer 'io' accesible a las rutas API
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 //El PORT es el indicado en el entregable
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Estoy escuchando el puerto ${PORT}`)
 })
 
 //Conexión por sockets
 io.on("connection", async  (socket) => {
-    console.log("cliente conectado"); });
+    console.log("cliente conectado"); 
 
 socket.emit("updateProducts", await productManager.getAllProducts());
 socket.on("newProduct", async (productData) => { 
@@ -34,4 +40,4 @@ socket.on("deleteProduct", async (productId) => {
     await productManager.deleteProductById(productId)
     io.emit("updateProducts", await productManager.getAllProducts());
 })
-
+});

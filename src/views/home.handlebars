@@ -1,0 +1,25 @@
+<div class="container">
+    <h1 class="main-title">Lista de Productos</h1>
+    <p class="subtitle">Esta es una vista estática de los productos cargados en el sistema.</p>
+    
+    <div class="product-list">
+        {{#if products.length}}
+            {{#each products}}
+                <div class="product-card">
+                    <h3 class="product-title">{{this.title}}</h3>
+                    <p class="product-description">{{this.description}}</p>
+                    <div class="product-details">
+                        <span>Precio: ${{this.price}}</span>
+                        <span>Código: {{this.code}}</span>
+                        <span>Stock: {{this.stock}}</span>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="empty-state">
+                <h2>No hay productos para mostrar.</h2>
+                <p>Agregue nuevos productos para verlos aquí.</p>
+            </div>
+        {{/if}}
+    </div>
+</div>

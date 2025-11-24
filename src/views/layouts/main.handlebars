@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{!-- El título se pasará desde cada ruta del views.router.js --}}
+    <title>{{title}}</title>
+    
+    {{!-- Vinculamos nuestra hoja de estilos que vive en la carpeta public --}}
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Mi E-commerce de Productos</h1>
+        <nav>
+            <a href="/">Home (Estático)</a>
+            <a href="/realtimeproducts">Productos en Tiempo Real</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {{{body}}}
+    </main>
+
+    <footer class="main-footer">
+        <p>Footer de prueba</p>
+    </footer>
+    
+</body>
+</html>
