@@ -3,6 +3,10 @@ const http = require("http");
 const { Server } = require("socket.io");
 const ProductManager = require("./src/managers/ProductManager");
 const path = require("path");
+const connectDB = require("./src/config/dbConnection");
+
+// Conectar a la base de datos MongoDB
+connectDB();
 
 const PORT=8080
 const productManager = new ProductManager(path.join(__dirname, "./src/data/Productos.json"));
