@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    {{!-- El título se pasará desde cada ruta del views.router.js --}}
     <title>{{title}}</title>
-    
-    {{!-- Vinculamos nuestra hoja de estilos que vive en la carpeta public --}}
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -15,18 +11,17 @@
     <header class="main-header">
         <h1>Mi E-commerce de Productos</h1>
         <nav>
-            <a href="/">Home (Estático)</a>
+            <a href="/products">Catalogo de productos</a>
+            <a href="/carts/694dcfe4235738d528554e5f">Mi Carrito</a>
             <a href="/realtimeproducts">Productos en Tiempo Real</a>
         </nav>
     </header>
-
     <main class="main-content">
         {{{body}}}
     </main>
-
     <footer class="main-footer">
         <p>Footer de prueba</p>
     </footer>
-    
+    <script src="/js/productsClient.js"></script>
 </body>
 </html>

@@ -1,6 +1,4 @@
-/* src/public/css/style.css */
 
-/* --- GENERALES --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -125,3 +123,66 @@ form button {
 form button:hover {
     background-color: #b91c1c;
 }
+
+/* --- ESTILOS PARA LA VISTA DEL CARRITO --- */
+.cart-container {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.cart-items-list {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cart-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.item-details, .item-controls, .item-subtotal {
+    flex: 1;
+}
+
+.item-title { margin: 0 0 0.5rem 0; color: #34495e; }
+.item-category, .item-price { color: #7f8c8d; margin: 0; }
+
+.item-controls { text-align: center; }
+.quantity-input { width: 60px; text-align: center; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; }
+.remove-btn { background: none; border: none; color: #e74c3c; cursor: pointer; margin-top: 0.5rem; }
+.remove-btn:hover { text-decoration: underline; }
+
+.item-subtotal { text-align: right; }
+
+.cart-summary {
+    flex: 1;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 100px;
+}
+.total-line { display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 1.2rem; }
+.checkout-btn, .empty-cart-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.checkout-btn { background-color: #27ae60; color: white; }
+.checkout-btn:hover { background-color: #229954; }
+.empty-cart-btn { background-color: #e74c3c; color: white; margin-top: 0.5rem; }
+.empty-cart-btn:hover { background-color: #c0392b; }

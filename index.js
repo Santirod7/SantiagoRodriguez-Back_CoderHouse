@@ -1,47 +1,71 @@
-const app = require("./src/app")
 const http = require("http");
 const { Server } = require("socket.io");
-const ProductManager = require("./src/managers/ProductManager");
-const path = require("path");
+const app = require("./src/app"); 
 const connectDB = require("./src/config/dbConnection");
+const ProductManager = require("./src/managers/ProductManager");
+const productsRouter = require("./src/routes/products.routes.js"); 
+const cartsRouter = require("./src/routes/cart.routes.js");
+const viewsRouter = require("./src/routes/views.routes.js");
 
-// Conectar a la base de datos MongoDB
+// base de datos
 connectDB();
 
-const PORT=8080
-const productManager = new ProductManager(path.join(__dirname, "./src/data/Productos.json"));
+const PORT = 8080;
+const productManager = new ProductManager();
 
-//Creo el servidor HTTP con la app de express
+// servidores
 const server = http.createServer(app);
-
-//  Creo el servidor de Websockets
 const io = new Server(server);
 
-// Middleware para hacer 'io' accesible a las rutas API
+// middleware para sockets
 app.use((req, res, next) => {
     req.io = io;
     next();
 });
 
-//El PORT es el indicado en el entregable
+// rutas
+app.use("/", viewsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+
+// iniciamos el servidor
 server.listen(PORT, () => {
-    console.log(`Estoy escuchando el puerto ${PORT}`)
-})
+    console.log(`Estoy escuchando el puerto ${PORT}`);
+});
 
-//Conexión por sockets
-io.on("connection", async  (socket) => {
-    console.log("cliente conectado"); 
+// lógica de los sockets
+io.on("connection", async (socket) => {
+    console.log("cliente conectado");
 
-socket.emit("updateProducts", await productManager.getAllProducts());
-socket.on("newProduct", async (productData) => { 
-console.log("Nuevo producto recibido:", productData);
-await productManager.addProduct(productData)
-io.emit("updateProducts", await productManager.getAllProducts());
-})
+    try {
+        const result = await productManager.getAllProducts({ limit: 100 }); 
+    socket.emit("updateProducts", result.docs); 
+} catch (error) {
+        console.error("Error al enviar productos iniciales:", error.message);
+    }
+    socket.on("newProduct", async (productData) => { 
+        try {    
+  await productManager.addProduct(productData);
+        const result = await productManager.getAllProducts({ limit: 100 });
+        io.emit("updateProducts", result.docs); 
+    } catch (error) {
+            console.error("Error al agregar el producto:", error.message);
+            socket.emit("productError", { message: `Error al crear producto: ${error.message}` });
+        }
+    });
 
-socket.on("deleteProduct", async (productId) => {
-    console.log(`Elimino el producto ${productId}`)
-    await productManager.deleteProductById(productId)
-    io.emit("updateProducts", await productManager.getAllProducts());
-})
+    socket.on("deleteProduct", async (productId) => {
+        try {
+            await productManager.deleteProductById(productId);
+        const result = await productManager.getAllProducts({ limit: 100 });
+        io.emit("updateProducts", result.docs);
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error.message);            socket.emit("productError", { message: `Error al eliminar producto: ${error.message}` });
+            socket.emit("productError", { message: `Error al eliminar producto: ${error.message}` });
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
 });

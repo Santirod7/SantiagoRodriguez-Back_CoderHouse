@@ -1,44 +1,95 @@
 const { Router } = require('express');
-const ProductManager = require('../managers/ProductManager.js'); // Necesitamos el manager para obtener los productos
-const path = require('path');
+const ProductManager = require('../managers/ProductManager.js');
+const CartManager = require('../managers/CartManager.js');
 
-// Creamos una instancia del router
-const viewsRouter = Router();
+const router = Router();
+const productManager = new ProductManager();
+const cartManager = new CartManager();
 
-const productManager = new ProductManager(path.join(__dirname, '../data/Productos.json'));
 
-// --- DEFINIMOS LAS RUTAS PARA LAS VISTAS ---
-
-// Ruta para la vista "home.handlebars"
-viewsRouter.get('/', async (req, res) => {
+router.get('/products', async (req, res) => {
     try {
-        const products = await productManager.getAllProducts();
+        const { limit = 10, page = 1, sort, query } = req.query;
+
+        // filtro
+        const filter = {};
+        if (query) {
+            if (query.toLowerCase() === 'available') {
+                filter.status = true;
+            } else {
+                filter.category = { $regex: query, $options: 'i' };
+            }
+        }
+
+        const result = await productManager.getAllProducts({ limit, page, sort, query: filter });
+
+        // links de paginación
+        const buildLink = (p) => {
+            const newParams = new URLSearchParams(req.query);
+            newParams.set('page', p);
+            return `/products?${newParams.toString()}`;
+        };
         
-        // La función res.render() toma dos argumentos:
-        res.render('home', { 
-            title: 'Home | Lista de Productos', // Un título para la pestaña del navegador
-            products: products 
+        const prevLink = result.hasPrevPage ? buildLink(result.prevPage) : null;
+        const nextLink = result.hasNextPage ? buildLink(result.nextPage) : null;
+
+        //vista 'products.handlebars'
+        res.render('products', {
+            title: 'Catálogo de Productos',
+            products: result.docs,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: prevLink,
+            nextLink: nextLink,
+            sort: sort,
+            query: query
         });
 
+        
+
     } catch (error) {
-        console.error("Error al obtener productos para la vista home:", error);
+        console.error("Error al renderizar la vista de productos:", error);
         res.status(500).send('Error interno del servidor');
     }
 });
 
-
-// Ruta para la vista "realTimeProducts.handlebars"
-viewsRouter.get('/realtimeproducts', (req, res) => {
+// vista para mostrar un carrito específico
+router.get('/carts/:cid', async (req, res) => {
     try {
-        res.render('realTimeProducts', {
-            title: 'Productos en Tiempo Real' // Título para la pestaña
+        const { cid } = req.params;
+        const cart = await cartManager.getCartById(cid);
+
+        if (!cart) {
+            return res.status(404).send('Carrito no encontrado');
+        }
+        let total = 0;
+        const productsWithSubtotal = cart.products.map(item => {
+            const subtotal = item.product.price * item.quantity;
+            total += subtotal; 
+            return {
+                ...item, 
+                subtotal: subtotal.toFixed(2) 
+            };
+        });
+
+        res.render('cart', {
+            title: `Carrito ${cid}`,
+            products: productsWithSubtotal, 
+            total: total.toFixed(2) 
         });
 
     } catch (error) {
-        console.error("Error al renderizar la vista de tiempo real:", error);
+        console.error("Error al renderizar la vista del carrito:", error);
         res.status(500).send('Error interno del servidor');
     }
 });
 
+router.get('/', (req, res) => res.render('home'));
+router.get('/realtimeproducts', (req, res) => res.render('realTimeProducts'));
 
-module.exports = viewsRouter;
+
+module.exports = router;

@@ -1,0 +1,46 @@
+<section class="container">
+    <h1 class="main-title">Detalles de tu Carrito de Compras</h1>
+    
+    {{#if products.length}}
+        <div class="cart-container">
+            <div class="cart-items-list">
+                {{#each products}}
+                    <div class="cart-item-card" data-product-id="{{this.product._id}}">
+                        <div class="item-details">
+                            <h3 class="item-title">{{this.product.title}}</h3>
+                            <p class="item-category">Categoría: {{this.product.category}}</p>
+                            <p class="item-price">Precio Unitario: ${{this.product.price}}</p>
+                        </div>
+                        <div class="item-controls">
+                            <label for="quantity-{{this.product._id}}">Cantidad:</label>
+                            <input id="quantity-{{this.product._id}}" type="number" value="{{this.quantity}}" min="1" class="quantity-input">
+                            <button class="remove-btn">Eliminar</button>
+                        </div>
+                        <div class="item-subtotal">
+                            <span>Subtotal:</span>
+                            <strong>${{this.subtotal}}</strong>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            
+            <div class="cart-summary">
+                <h3>Resumen de Compra</h3>
+                <div class="total-line">
+                    <span>Total:</span>
+                    <strong>${{total}}</strong>
+                </div>
+                <button class="checkout-btn">Finalizar Compra</button>
+                <button id="empty-cart-btn" class="empty-cart-btn">Vaciar Carrito</button>
+            </div>
+        </div>
+        
+    {{else}}
+        <div class="empty-state">
+            <h2>Tu carrito está vacío.</h2>
+            <p>¡Agrega productos desde el catálogo para empezar a comprar!</p>
+            <a href="/products" class="pagination-link">Ver Catálogo</a>
+        </div>
+    {{/if}}
+</section>
+<script src="/js/cartClient.js"></script>

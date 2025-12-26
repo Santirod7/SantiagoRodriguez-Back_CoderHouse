@@ -1,110 +1,82 @@
-const fs = require("fs/promises"); 
-const crypto = require("crypto");   
+
+const Product = require('../models/Product.model.js');
 
 class ProductManager {
-  constructor(filePath) {
-    this.filePath = filePath; 
-  }
-
-  async #readFile() {
-    try {
-      const data = await fs.readFile(this.filePath, "utf-8");
-      if (data.trim() === "") return []; 
-      return JSON.parse(data);
-    } catch (error) {
-      if (error.code === "ENOENT") return [];
-      throw error;
+    constructor() {
     }
-  }
-  async #writeFile(products) {
-    await fs.writeFile(this.filePath, JSON.stringify(products, null, 2));
-  }
-
-  //* CREATE - CREAR UN PRODUCTO 
-  async addProduct({ title, description, code, price, status = true, stock, category }) {
-    // campos obligatorios
-    if (!title || !description || !code || price === undefined || stock === undefined || !category) {
-      throw new Error("Todos los campos son obligatorios");
+    async addProduct(productData) {
+        try {
+            const newProduct = await Product.create(productData);
+            return newProduct;
+        } catch (error) {
+            throw new Error(`Error al crear el producto: ${error.message}`);
+        }
     }
 
-    const products = await this.#readFile();
+async getAllProducts(params = {}) {
+            try {
+            // Extraemos los parámetros de la consulta
+            const limit = parseInt(params.limit) || 10;
+            const page = parseInt(params.page) || 1;
+            const sort = params.sort; // 'asc' o 'desc'
+            const query = params.query || {}; // Filtro de búsqueda
 
-    // validación para que el "code" no se repita
-    if (products.some(p => p.code === code)) {
-        throw new Error(`El código '${code}' ya existe. No se puede agregar el producto`);
+            // Opciones de paginación y ordenamiento
+            const options = {
+                page: page,
+                limit: limit,
+                lean: true // lean:true para obtener objetos JSON simples en lugar de documentos de Mongoose
+            };
+
+            if (sort) {
+                options.sort = { price: sort === 'asc' ? 1 : -1 };
+            }
+
+            // El primer argumento es el filtro, el segundo son las opciones de paginación.
+            const products = await Product.paginate(query, options);
+            return products;
+        } catch (error) {
+            throw new Error(`Error al obtener los productos: ${error.message}`);
+        }
     }
 
-    // moldeado de producto
-    const newProduct = {
-      id: crypto.randomUUID(), // ID unico autogenerado
-      title: String(title),
-      description: String(description),
-      code: String(code),
-      price: Number(price), 
-      status: Boolean(status), 
-      stock: Number(stock),   
-      category: String(category),
-    };
-
-    // agrego producto
-    products.push(newProduct);
-    await this.#writeFile(products);
-
-    return newProduct;
-  }
-
-  // READ - LEER TODOS LOS PRODUCTOS
-  async getAllProducts() {
-    return await this.#readFile();
-  }
-
-  // READ - BUSCAR PRODUCTO POR ID
-  async getProductById(id) {
-    const products = await this.#readFile();
-    const product = products.find((p) => p.id === id);
-
-    if (!product) {
-      console.log(`Producto con id '${id}' no encontrado`);
-      return null;
+    async getProductById(id) {
+        try {
+            const product = await Product.findById(id).lean();
+            if (!product) {
+                throw new Error('Producto no encontrado.');
+            }
+            return product;
+        } catch (error) {
+            throw new Error(`Error al obtener el producto: ${error.message}`);
+        }
     }
 
-    return product;
-  }
-
-  // UPDATE - ACTUALIZAR UN PRODUCTO POR ID
-  async updateProductById(id, dataToUpdate) {
-    const products = await this.#readFile();
-    const productIndex = products.findIndex((p) => p.id === id);
-
-    if (productIndex === -1) {
-      console.log(`Producto con id '${id}' no encontrado, no se puede actualizar`);
-      return null;
-    }
-    // producto actualizado combinando el viejo con los datos nuevos
-    const updatedProduct = { ...products[productIndex], ...dataToUpdate };
-    // lo reemplazo
-    products[productIndex] = updatedProduct;
-
-    await this.#writeFile(products);
-    console.log(`Producto con id '${id}' actualizado`);
-    return updatedProduct;
-  }
-
-  // DELETE - ELIMINAR UN PRODUCTO POR ID
-  async deleteProductById(id) {
-    const products = await this.#readFile();
-    const newProductsArray = products.filter((p) => p.id !== id);
-
-    if (products.length === newProductsArray.length) {
-      console.log(`Producto con id '${id}' no encontrado, no se eliminó nada`);
-      return null;
+    async updateProductById(id, dataToUpdate) {
+        try {
+            // asegura que el método devuelva el documento ya actualizado.
+            const updatedProduct = await Product.findByIdAndUpdate(id, dataToUpdate, { new: true }).lean();
+            if (!updatedProduct) {
+                throw new Error('Producto no encontrado para actualizar.');
+            }
+            return updatedProduct;
+        } catch (error) {
+            throw new Error(`Error al actualizar el producto: ${error.message}`);
+        }
     }
 
-    await this.#writeFile(newProductsArray);
-    console.log(`Producto con id '${id}' eliminado correctamente`);
-    return true;
-  }
+    async deleteProductById(id) {
+        try {
+            // 'findByIdAndDelete' busca y elimina un documento por su ID.
+            const deletedProduct = await Product.findByIdAndDelete(id).lean();
+            if (!deletedProduct) {
+                throw new Error('Producto no encontrado para eliminar.');
+            }
+            return deletedProduct;
+        } catch (error) {
+            throw new Error(`Error al eliminar el producto: ${error.message}`);
+        }
+    }
 }
-
 
 module.exports = ProductManager;

@@ -1,0 +1,44 @@
+<section class="container">
+    <h1 class="main-title">Catálogo de Productos</h1>
+    
+    <article class="product-list">
+        {{#if products.length}}
+            {{#each products}}
+                <div class="product-card">
+                    <h3 class="product-title">{{this.title}}</h3>
+                    <p class="product-description">{{this.description}}</p>
+                    <div class="product-details">
+                        <span>Precio: ${{this.price}}</span>
+                        <span>Categoría: {{this.category}}</span>
+                        <span>Stock: {{this.stock}}</span>
+                    </div>
+                    <button class="add-to-cart-btn" data-product-id="{{this._id}}">Agregar al Carrito</button>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="empty-state">
+                <h2>No se encontraron productos.</h2>
+                <p>Intenta con otros filtros.</p>
+            </div>
+        {{/if}}
+    </article>
+
+    <hr class="divider">
+
+    {{!-- Controles de Paginación --}}
+    <article class="pagination-controls">
+        {{#if hasPrevPage}}
+            <a href="{{prevLink}}" class="pagination-link">← Anterior</a>
+        {{else}}
+            <span class="pagination-link disabled">← Anterior</span>
+        {{/if}}
+        
+        <span class="current-page">Página {{page}} de {{totalPages}}</span>
+
+        {{#if hasNextPage}}
+            <a href="{{nextLink}}" class="pagination-link">Siguiente →</a>
+        {{else}}
+            <span class="pagination-link disabled">Siguiente →</span>
+        {{/if}}
+    </article>
+</section>
