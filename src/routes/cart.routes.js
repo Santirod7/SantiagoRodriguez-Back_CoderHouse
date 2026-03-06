@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const CartManager = require('../managers/CartManager.js');
+import { Router } from 'express';
+import CartManager from '../dao/managers/CartManager.js';
 const router = Router();
 const cartManager = new CartManager(); 
 
@@ -89,4 +89,4 @@ router.delete('/:cid', async (req, res) => {
         res.status(404).json({ status: 'error', message: error.message });
     }
 });
-module.exports = router;
+export default router;

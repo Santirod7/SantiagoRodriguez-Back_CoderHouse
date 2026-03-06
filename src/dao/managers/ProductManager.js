@@ -1,5 +1,5 @@
 
-const Product = require('../models/Product.model.js');
+import Product from '../models/Product.model.js';
 
 class ProductManager {
     constructor() {
@@ -79,4 +79,4 @@ async getAllProducts(params = {}) {
     }
 }
 
-module.exports = ProductManager;
+export default ProductManager;

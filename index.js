@@ -1,11 +1,12 @@
-const http = require("http");
-const { Server } = require("socket.io");
-const app = require("./src/app"); 
-const connectDB = require("./src/config/dbConnection");
-const ProductManager = require("./src/managers/ProductManager");
-const productsRouter = require("./src/routes/products.routes.js"); 
-const cartsRouter = require("./src/routes/cart.routes.js");
-const viewsRouter = require("./src/routes/views.routes.js");
+import http from "http";
+import { Server } from "socket.io";
+import app from "./src/app.js";
+import connectDB from "./src/config/dbConnection.js"; 
+import ProductManager from "./src/dao/managers/ProductManager.js";
+import productsRouter from "./src/routes/products.routes.js"; 
+import cartsRouter from "./src/routes/cart.routes.js";
+import viewsRouter from "./src/routes/views.routes.js";
+import sessionRouter from "./src/routes/sessions.routes.js";
 
 // base de datos
 connectDB();
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 
 // rutas
 app.use("/", viewsRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 

@@ -148,6 +148,12 @@ form button:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+.strong
+    {
+        font-weight: bold;
+        color: #34495e;
+    }
+
 .item-details, .item-controls, .item-subtotal {
     flex: 1;
 }

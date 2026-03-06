@@ -1,6 +1,5 @@
-
-const { Router } = require('express');
-const ProductManager = require('../managers/ProductManager.js');
+import { Router } from 'express';
+import ProductManager from '../dao/managers/ProductManager.js';
 
 const router = Router();
 const productManager = new ProductManager(); 
@@ -105,4 +104,4 @@ req.io.emit('updateProducts', result.docs);
     }
 });
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const ProductManager = require('../managers/ProductManager.js');
-const CartManager = require('../managers/CartManager.js');
+import { Router } from 'express';
+import ProductManager from '../dao/managers/ProductManager.js';
+import CartManager from '../dao/managers/CartManager.js';
 
 const router = Router();
 const productManager = new ProductManager();
@@ -36,6 +36,7 @@ router.get('/products', async (req, res) => {
         //vista 'products.handlebars'
         res.render('products', {
             title: 'Catálogo de Productos',
+            usuario: req.session.usuario,
             products: result.docs,
             totalPages: result.totalPages,
             prevPage: result.prevPage,
@@ -90,6 +91,8 @@ router.get('/carts/:cid', async (req, res) => {
 
 router.get('/', (req, res) => res.render('home'));
 router.get('/realtimeproducts', (req, res) => res.render('realTimeProducts'));
+router.get('/login', (req, res) => res.render('login'));
+router.get('/register', (req, res) => res.render('register'));
 
 
-module.exports = router;
+export default router;

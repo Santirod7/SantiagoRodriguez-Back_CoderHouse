@@ -1,7 +1,5 @@
-// src/models/Product.model.js
-
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2'); // Importamos el plugin
+import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 // modelado del esquema de productos
 const productSchema = new mongoose.Schema({
@@ -45,4 +43,4 @@ productSchema.plugin(mongoosePaginate);
 
 const Product = mongoose.model('Product', productSchema);
 
-module.exports = Product;
+export default Product;
